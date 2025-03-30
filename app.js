@@ -1,8 +1,11 @@
 require('dotenv').config()
 const fs = require('fs')
 const express = require('express')
+const morgan = require('morgan')
 
 const app = express();
+
+app.use(morgan('dev'))
 
 app.use(express.json()) // Middleware to parse JSON data from request body
 
