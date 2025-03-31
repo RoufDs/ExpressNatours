@@ -1,4 +1,3 @@
-require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 
@@ -7,7 +6,10 @@ const userRouter = require('./routes/userRoutes')
 
 const app = express();
 
-app.use(morgan('dev'))
+if (process.env.NODE_ENV.trim() === 'development') {
+  app.use(morgan('dev'))
+}
+
 app.use(express.json()) // Middleware to parse JSON data from request body
 app.use(express.static(`${__dirname}/public`)) // Middleware to serve static files from the public directory
 
