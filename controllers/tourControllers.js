@@ -17,6 +17,18 @@ exports.checkId = (req, res, next, val) => {
   next() // Call the next middleware or route handler
 }
 
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price) {
+    res.status(400).json({
+      status: 'fail',
+      message: 'Missing name or price',
+    })
+    return
+  }
+
+  next() // Call the next middleware or route handler
+}
+
 exports.getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
