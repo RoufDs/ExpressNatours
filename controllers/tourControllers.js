@@ -2,9 +2,22 @@ const fs = require('fs')
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`))
 
-exports.getAllTours = (req, res) => {
-  console.log(req.requestTime);
+exports.checkId = (req, res, next, val) => {
+  const id = req.params.id * 1 // convert string to number
+  const tour = tours.find(x => x.id === id)
 
+  if (!tour) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'Tour not found',
+    })
+    return
+  }
+
+  next() // Call the next middleware or route handler
+}
+
+exports.getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
     requestedAt: req.requestTime,
@@ -18,14 +31,6 @@ exports.getAllTours = (req, res) => {
 exports.getTour = (req, res) => {
   const id = req.params.id * 1 // convert string to number
   const tour = tours.find(x => x.id === id)
-
-  if (!tour) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'Tour not found',
-    })
-    return
-  }
 
   res.status(200).json({
     status: 'success',
@@ -58,14 +63,6 @@ exports.updateTour = (req, res) => {
   const id = req.params.id * 1 // convert string to number
   const tour = tours.find(x => x.id === id)
 
-  if (!tour) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'Tour not found',
-    })
-    return
-  }
-
   res.status(200).json({
     status: 'success',
     data: {
@@ -75,17 +72,6 @@ exports.updateTour = (req, res) => {
 }
 
 exports.deleteTour = (req, res) => {
-  const id = req.params.id * 1 // convert string to number
-  const tour = tours.find(x => x.id === id)
-
-  if (!tour) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'Tour not found',
-    })
-    return
-  }
-
   res.status(204).json({
     status: 'success',
     data: null,
