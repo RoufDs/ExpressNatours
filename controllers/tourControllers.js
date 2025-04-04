@@ -60,15 +60,32 @@ exports.createTour = async (req, res) => {
   }
 }
 
-exports.updateTour = (req, res) => {
-  const id = req.params.id * 1 // convert string to number
+exports.updateTour = async (req, res) => {
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    })
+    if (!tour) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Tour not found',
+      })
+    }
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour: '<Updated tour here...>'
-    },
-  })
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour: tour
+      },
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      message: error
+    })
+
+  }
 }
 
 exports.deleteTour = (req, res) => {
